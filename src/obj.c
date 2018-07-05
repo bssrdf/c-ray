@@ -26,17 +26,29 @@ void addTransform(struct crayOBJ *obj, struct matrixTransform transform) {
 void transformMesh(struct crayOBJ *object) {
 	for (int tf = 0; tf < object->transformCount; tf++) {
 		//Perform transforms
+		
+		//Evaluate amount of vectors to transform
+		int vecCount = 0;
 		for (int p = object->firstPolyIndex; p < (object->firstPolyIndex + object->polyCount); p++) {
 			for (int v = 0; v < polygonArray[p].vertexCount; v++) {
-				transformVector(&vertexArray[polygonArray[p].vertexIndex[v]], &object->transforms[tf]);
+				vecCount++;
 			}
 		}
-		//Clear isTransformed flags
-		for (int p = object->firstPolyIndex; p < object->firstPolyIndex + object->polyCount; p++) {
-			for (int v = 0; v < polygonArray->vertexCount; v++) {
-				vertexArray[polygonArray[p].vertexIndex[v]].isTransformed = false;
+		
+		bool *alreadyTransformed = (bool*)calloc(vecCount, sizeof(bool));
+		
+		for (int p = object->firstPolyIndex; p < (object->firstPolyIndex + object->polyCount); p++) {
+			for (int v = 0; v < polygonArray[p].vertexCount; v++) {
+				if (!alreadyTransformed[(p - object->firstPolyIndex) * v]) {
+					transformVector(&vertexArray[polygonArray[p].vertexIndex[v]], &object->transforms[tf]);
+					alreadyTransformed[(p - object->firstPolyIndex) * v] = true;
+				} else {
+					//skip
+					//printf("Skip %i,%i\n", p, v);
+				}
 			}
 		}
+		free(alreadyTransformed);
 	}
 }
 

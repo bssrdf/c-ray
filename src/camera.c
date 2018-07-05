@@ -21,7 +21,6 @@
 void transformCameraView(struct camera *cam, struct vector *direction) {
 	for (int i = 1; i < cam->transformCount; i++) {
 		transformVector(direction, &cam->transforms[i]);
-		direction->isTransformed = false;
 	}
 }
 

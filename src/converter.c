@@ -23,7 +23,6 @@ struct vector vectorFromObj(obj_vector *vec) {
 	vector.x = vec->e[0];
 	vector.y = vec->e[1];
 	vector.z = vec->e[2];
-	vector.isTransformed = false;
 	return vector;
 }
 

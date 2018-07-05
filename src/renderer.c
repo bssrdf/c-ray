@@ -416,8 +416,7 @@ DWORD WINAPI renderThread(LPVOID arg) {
 													/ renderer->scene->camera->focalLength,
 												   (fracY - 0.5 * renderer->image->size.height)
 													/ renderer->scene->camera->focalLength,
-													1.0,
-													false};
+													1.0};
 						
 						//Normalize direction
 						direction = normalizeVector(&direction);

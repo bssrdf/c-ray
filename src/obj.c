@@ -35,18 +35,21 @@ void transformMesh(struct crayOBJ *object) {
 			}
 		}
 		
-		bool *alreadyTransformed = (bool*)calloc(vecCount, sizeof(bool));
+		bool **alreadyTransformed = (bool**)calloc(vecCount, sizeof(bool*));
+		for (int i = 0; i < vecCount; i++) {
+			alreadyTransformed[i] = (bool*)calloc(3, sizeof(bool));
+		}
 		
 		for (int p = object->firstPolyIndex; p < (object->firstPolyIndex + object->polyCount); p++) {
 			for (int v = 0; v < polygonArray[p].vertexCount; v++) {
-				if (!alreadyTransformed[(p - object->firstPolyIndex) * v]) {
+				if (!alreadyTransformed[p - object->firstPolyIndex][v]) {
 					transformVector(&vertexArray[polygonArray[p].vertexIndex[v]], &object->transforms[tf]);
-					alreadyTransformed[(p - object->firstPolyIndex) * v] = true;
-				} else {
-					//skip
-					//printf("Skip %i,%i\n", p, v);
+					alreadyTransformed[p - object->firstPolyIndex][v] = true;
 				}
 			}
+		}
+		for (int i = 0; i < vecCount; i++) {
+			free(alreadyTransformed[i]);
 		}
 		free(alreadyTransformed);
 	}
